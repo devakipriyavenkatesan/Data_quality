@@ -109,3 +109,16 @@
         else:
             print(f"Unsupported rule type: {rule_type}")
             continue
+
+
+
+
+SELECT customer_id,
+       COUNT(*) AS total_orders,
+       SUM(order_amount) AS total_amount
+FROM ORDERS
+WHERE order_date >= DATEADD(DAY, -30, CURRENT_DATE)
+GROUP BY customer_id
+HAVING SUM(order_amount) > 50000
+   AND COUNT(*) > 10
+   AND SUM(CASE WHEN status = 'FAILED' THEN 1 ELSE 0 END) > 0
